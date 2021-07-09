@@ -21,7 +21,13 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   bool isDataRecieved = false;
+  bool? _isSearching;
+  int _widgetId = 1;
   List<Item> items = <Item>[];
+  List<Item> searchedItems = <Item>[];
+  final globalKey = new GlobalKey<ScaffoldState>();
+  final TextEditingController _controller = new TextEditingController();
+  String _searchText = "";
   String selectedSortModeButtonText = 'Default Ascending';
   // final List<String> sortModes = const [
   //   'Default Order',
@@ -34,6 +40,22 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   // ];
   final PopularMoviesApiService popularMoviesApiService =
       PopularMoviesApiService();
+
+  _HomePageState() {
+    _controller.addListener(() {
+      if (_controller.text.isEmpty) {
+        setState(() {
+          _isSearching = false;
+          _searchText = "";
+        });
+      } else {
+        setState(() {
+          _isSearching = true;
+          _searchText = _controller.text;
+        });
+      }
+    });
+  }
 
   Future<void> getPopularMovies() async {
     Response response = await popularMoviesApiService.fetchMovies();
@@ -99,10 +121,26 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                       });
   }
 
+  void _updateWidget() {
+    setState(() {
+      _widgetId = _widgetId == 1 ? 2 : 1;
+    });
+  }
+
+  Widget _renderWidget() {
+    return _widgetId == 1 ? _sortWidget() : _searchWidget();
+  }
+
+  _searchFor(String query) {
+    searchedItems.clear();
+    if (_isSearching != null) {}
+  }
+
   @override
   void initState() {
     getPopularMovies();
     print('isDataRecieved : $isDataRecieved');
+    _isSearching = false;
     super.initState();
   }
 
@@ -193,7 +231,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         label: Text(
                           'Top ${items.length}',
                           style: TextStyle(
-                            fontSize: 18,
+                            fontSize: 20,
                             fontWeight: FontWeight.w900,
                           ),
                         ),
@@ -219,7 +257,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         //   14,
                         //   12,
                         // ],
-                        minFontSize: 20,
+                        minFontSize: 24,
                         maxFontSize: double.infinity,
                         style: TextStyle(
                           fontWeight: FontWeight.w900,
@@ -270,75 +308,82 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   //   ],
                   // ),
                   SizedBox(height: 40),
-                  Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      AutoSizeText(
-                        'Sort by : ',
-                        minFontSize: 16,
-                        style: TextStyle(
-                          // fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      MaterialButton(
-                        child: AutoSizeText(
-                          selectedSortModeButtonText,
-                          minFontSize: 16,
-                          style: TextStyle(
-                            // fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        // padding: EdgeInsets.zero,
-                        color: Colors.grey[300],
-                        shape: StadiumBorder(),
-                        // shape: ContinuousRectangleBorder(
-                        //   borderRadius: BorderRadius.circular(15),
-                        // ),
-                        minWidth: MediaQuery.of(context).size.width * 0.4,
-                        elevation: 0,
-                        highlightElevation: 0,
-                        onPressed: () {
-                          showModalBottomSheet<String>(
-                            context: context,
-                            builder: (builder) => SortModesBottomSheet(),
-                            backgroundColor: Colors.transparent,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(25),
-                              ),
-                            ),
-                            // shape: ContinuousRectangleBorder(
-                            //   borderRadius:
-                            //       BorderRadius.all(Radius.circular(25)),
-                            // ),
-                            // elevation: 50,
-                            isScrollControlled: true,
-                            transitionAnimationController: AnimationController(
-                              vsync: this,
-                              duration: Duration(milliseconds: 1000),
-                              reverseDuration: Duration(milliseconds: 500),
-                            ),
-                            // elevation: 5,
-                          ).then((selectedSortOption) {
-                            print(
-                                'selectedSortOption home : $selectedSortOption');
-                            selectedSortOption == null
-                                ? sortFetchedPopularMovies(
-                                    mode: 'Default Ascending')
-                                : sortFetchedPopularMovies(
-                                    mode: selectedSortOption);
-                            setState(() {
-                              selectedSortModeButtonText = selectedSortOption!;
-                            });
-                          });
-                        },
-                      ),
-                    ],
+                  // _sortWidget(),
+                  AnimatedSwitcher(
+                    duration: Duration(seconds: 1),
+                    child: _renderWidget(),
+                    switchInCurve: Curves.easeInBack,
+                    switchOutCurve: Curves.easeOutBack,
                   ),
+                  // Row(
+                  //   mainAxisSize: MainAxisSize.max,
+                  //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //   crossAxisAlignment: CrossAxisAlignment.center,
+                  //   children: [
+                  //     AutoSizeText(
+                  //       'Sort by : ',
+                  //       minFontSize: 16,
+                  //       style: TextStyle(
+                  //         // fontSize: 16,
+                  //         fontWeight: FontWeight.bold,
+                  //       ),
+                  //     ),
+                  //     MaterialButton(
+                  //       child: AutoSizeText(
+                  //         selectedSortModeButtonText,
+                  //         minFontSize: 16,
+                  //         style: TextStyle(
+                  //           // fontSize: 16,
+                  //           fontWeight: FontWeight.bold,
+                  //         ),
+                  //       ),
+                  //       // padding: EdgeInsets.zero,
+                  //       color: Colors.grey[300],
+                  //       shape: StadiumBorder(),
+                  //       // shape: ContinuousRectangleBorder(
+                  //       //   borderRadius: BorderRadius.circular(15),
+                  //       // ),
+                  //       minWidth: MediaQuery.of(context).size.width * 0.4,
+                  //       elevation: 0,
+                  //       highlightElevation: 0,
+                  //       onPressed: () {
+                  //         showModalBottomSheet<String>(
+                  //           context: context,
+                  //           builder: (builder) => SortModesBottomSheet(),
+                  //           backgroundColor: Colors.transparent,
+                  //           shape: RoundedRectangleBorder(
+                  //             borderRadius: BorderRadius.all(
+                  //               Radius.circular(25),
+                  //             ),
+                  //           ),
+                  //           // shape: ContinuousRectangleBorder(
+                  //           //   borderRadius:
+                  //           //       BorderRadius.all(Radius.circular(25)),
+                  //           // ),
+                  //           // elevation: 50,
+                  //           isScrollControlled: true,
+                  //           transitionAnimationController: AnimationController(
+                  //             vsync: this,
+                  //             duration: Duration(milliseconds: 1000),
+                  //             reverseDuration: Duration(milliseconds: 500),
+                  //           ),
+                  //           // elevation: 5,
+                  //         ).then((selectedSortOption) {
+                  //           print(
+                  //               'selectedSortOption home : $selectedSortOption');
+                  //           selectedSortOption == null
+                  //               ? sortFetchedPopularMovies(
+                  //                   mode: 'Default Ascending')
+                  //               : sortFetchedPopularMovies(
+                  //                   mode: selectedSortOption);
+                  //           setState(() {
+                  //             selectedSortModeButtonText = selectedSortOption!;
+                  //           });
+                  //         });
+                  //       },
+                  //     ),
+                  //   ],
+                  // ),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -497,6 +542,140 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             ),
           );
         },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          _updateWidget();
+        },
+        child: _widgetId == 1
+            ? Icon(Icons.search_rounded)
+            : Icon(Icons.sort_rounded),
+        backgroundColor: Colors.amber,
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+    );
+  }
+
+  Widget _sortWidget() {
+    return Container(
+      key: Key('sort'),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        color: Colors.green,
+      ),
+      height: AppBar().preferredSize.height,
+      child: Row(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          AutoSizeText(
+            'Sort by : ',
+            minFontSize: 16,
+            style: TextStyle(
+              // fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          MaterialButton(
+            child: AutoSizeText(
+              selectedSortModeButtonText,
+              minFontSize: 16,
+              style: TextStyle(
+                // fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            // padding: EdgeInsets.zero,
+            color: Colors.grey[300],
+            shape: StadiumBorder(),
+            // shape: ContinuousRectangleBorder(
+            //   borderRadius: BorderRadius.circular(15),
+            // ),
+            minWidth: MediaQuery.of(context).size.width * 0.4,
+            elevation: 0,
+            highlightElevation: 0,
+            onPressed: () {
+              showModalBottomSheet<String>(
+                context: context,
+                builder: (builder) => SortModesBottomSheet(),
+                backgroundColor: Colors.transparent,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(25),
+                  ),
+                ),
+                // shape: ContinuousRectangleBorder(
+                //   borderRadius:
+                //       BorderRadius.all(Radius.circular(25)),
+                // ),
+                // elevation: 50,
+                isScrollControlled: true,
+                transitionAnimationController: AnimationController(
+                  vsync: this,
+                  duration: Duration(milliseconds: 1000),
+                  reverseDuration: Duration(milliseconds: 500),
+                ),
+                // elevation: 5,
+              ).then((selectedSortOption) {
+                print('selectedSortOption home : $selectedSortOption');
+                selectedSortOption == null
+                    ? sortFetchedPopularMovies(mode: 'Default Ascending')
+                    : sortFetchedPopularMovies(mode: selectedSortOption);
+                setState(() {
+                  selectedSortModeButtonText = selectedSortOption!;
+                });
+              });
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _searchWidget() {
+    return Container(
+      key: Key('search'),
+      height: AppBar().preferredSize.height,
+      child: TextField(
+        controller: _controller,
+        minLines: 1,
+        maxLines: 1,
+        style: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.bold,
+          textBaseline: TextBaseline.alphabetic,
+        ),
+        textAlignVertical: TextAlignVertical.center,
+        cursorHeight: 20,
+        textAlign: TextAlign.start,
+        decoration: InputDecoration(
+          prefixIcon: Icon(
+            Icons.search_rounded,
+            color: Colors.black,
+          ),
+          // icon: Icon(
+          //   Icons.search_rounded,
+          //   color: Colors.black,
+          // ),
+          // contentPadding: EdgeInsets.zero,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          // focusedBorder: InputBorder.none,
+          // enabledBorder: InputBorder.none,
+          // errorBorder: InputBorder.none,
+          // disabledBorder: InputBorder.none,
+          // contentPadding:
+          //     EdgeInsets.only(left: 15, bottom: 11, top: 11, right: 15),
+          // hintText: "Hint here",
+          hintStyle: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            textBaseline: TextBaseline.alphabetic,
+          ),
+        ),
+        onChanged: (searchedQuery) => _searchFor(searchedQuery),
       ),
     );
   }

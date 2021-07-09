@@ -41,8 +41,8 @@ class _SortModesBottomSheetState extends State<SortModesBottomSheet> {
         builder: (_) => Container(
           margin: EdgeInsets.all(8),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(25),
-            color: Colors.white,
+            borderRadius: BorderRadius.circular(15),
+            color: Colors.grey[900],
           ),
           child: SingleChildScrollView(
             physics: NeverScrollableScrollPhysics(),
@@ -84,6 +84,7 @@ class _SortModesBottomSheetState extends State<SortModesBottomSheet> {
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
+                          color: Colors.white38,
                         ),
                       ),
                     ),
@@ -127,14 +128,14 @@ class _SortModesBottomSheetState extends State<SortModesBottomSheet> {
                           Text(
                             'Order',
                             style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white38),
                           ),
-                          SizedBox(width: 15),
+                          SizedBox(width: 20),
                           Expanded(
                             child: Divider(
-                              color: Colors.grey,
+                              color: Colors.white38,
                               // thickness: 0.60,
                             ),
                           ),
@@ -171,7 +172,7 @@ class _SortModesBottomSheetState extends State<SortModesBottomSheet> {
                       children: [
                         MaterialButton(
                           child: Text('Dismiss'),
-                          textColor: Colors.amber,
+                          textColor: Colors.amber[900],
                           shape: ContinuousRectangleBorder(
                             borderRadius: BorderRadius.circular(15),
                           ),
@@ -195,7 +196,7 @@ class _SortModesBottomSheetState extends State<SortModesBottomSheet> {
                         SizedBox(width: 15),
                         MaterialButton(
                           child: Text('Done'),
-                          color: Colors.amber,
+                          color: Colors.amber[900],
                           shape: ContinuousRectangleBorder(
                             borderRadius: BorderRadius.circular(15),
                           ),
@@ -247,7 +248,7 @@ class _SortModesBottomSheetState extends State<SortModesBottomSheet> {
           title: Text(
             'Default',
             style: const TextStyle(
-              color: Colors.black,
+              color: Colors.white,
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -259,8 +260,9 @@ class _SortModesBottomSheetState extends State<SortModesBottomSheet> {
             });
           },
           selected: SortByModes.Default == _selectedSortMode,
-          activeColor: Colors.amber,
-          selectedTileColor: Colors.blue,
+          activeColor: Colors.amber[900],
+
+          // selectedTileColor: Colors.blue,
           // activeColor: Colors.amber,
           // selectedTileColor: Colors.red,
           // tileColor: Colors.green,
@@ -269,7 +271,7 @@ class _SortModesBottomSheetState extends State<SortModesBottomSheet> {
           title: const Text(
             'Title',
             style: TextStyle(
-              color: Colors.black,
+              color: Colors.white,
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -281,15 +283,13 @@ class _SortModesBottomSheetState extends State<SortModesBottomSheet> {
             });
           },
           selected: SortByModes.Title == _selectedSortMode,
-          activeColor: Colors.amber,
-          selectedTileColor: Colors.red,
-          tileColor: Colors.green,
+          activeColor: Colors.amber[900],
         ),
         RadioListTile(
           title: const Text(
             'Rate',
             style: TextStyle(
-              color: Colors.black,
+              color: Colors.white,
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -301,15 +301,13 @@ class _SortModesBottomSheetState extends State<SortModesBottomSheet> {
             });
           },
           selected: SortByModes.Rate == _selectedSortMode,
-          activeColor: Colors.amber,
-          selectedTileColor: Colors.red,
-          tileColor: Colors.green,
+          activeColor: Colors.amber[900],
         ),
         RadioListTile(
           title: const Text(
             'Year',
             style: TextStyle(
-              color: Colors.black,
+              color: Colors.white,
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -321,9 +319,7 @@ class _SortModesBottomSheetState extends State<SortModesBottomSheet> {
             });
           },
           selected: SortByModes.Year == _selectedSortMode,
-          activeColor: Colors.amber,
-          selectedTileColor: Colors.red,
-          tileColor: Colors.green,
+          activeColor: Colors.amber[900],
         ),
       ],
     );
@@ -339,7 +335,7 @@ class _SortModesBottomSheetState extends State<SortModesBottomSheet> {
           title: const Text(
             'Ascending',
             style: TextStyle(
-              color: Colors.black,
+              color: Colors.white,
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -351,15 +347,13 @@ class _SortModesBottomSheetState extends State<SortModesBottomSheet> {
             });
           },
           selected: SortOrderModes.Ascending == _selectedSortOrder,
-          activeColor: Colors.amber,
-          selectedTileColor: Colors.red,
-          tileColor: Colors.green,
+          activeColor: Colors.amber[900],
         ),
         RadioListTile(
           title: const Text(
             'Descending',
             style: TextStyle(
-              color: Colors.black,
+              color: Colors.white,
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -371,9 +365,7 @@ class _SortModesBottomSheetState extends State<SortModesBottomSheet> {
             });
           },
           selected: SortOrderModes.Descending == _selectedSortOrder,
-          activeColor: Colors.amber,
-          selectedTileColor: Colors.red,
-          tileColor: Colors.green,
+          activeColor: Colors.amber[900],
         ),
       ],
     );
