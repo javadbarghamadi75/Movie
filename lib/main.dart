@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:movie/pages/home_page.dart';
-import 'package:movie/pages/new_home_page%20copy%202.dart';
 import 'package:movie/pages/new_home_page%20copy%203.dart';
-import 'package:movie/pages/new_home_page%20copy.dart';
-import 'package:movie/pages/new_home_page.dart';
 
 void main() {
   runApp(MyApp());

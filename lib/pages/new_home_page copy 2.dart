@@ -3,9 +3,7 @@ import 'package:lottie/lottie.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:movie/models/popular_movies_model.dart';
-import 'package:movie/pages/image_page.dart';
 import 'package:movie/services/popular_movies_service.dart';
-import 'package:http/http.dart' as http;
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:movie/sheets/sort_modal_bottom_sheet.dart';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -22,13 +20,10 @@ class NewHomePageCopy2 extends StatefulWidget {
 class _NewHomePageCopy2State extends State<NewHomePageCopy2>
     with TickerProviderStateMixin {
   bool isDataRecieved = false;
-  bool? _isSearching;
-  int _widgetId = 1;
   List<Item> items = <Item>[];
   List<Item> searchedItems = <Item>[];
   final globalKey = new GlobalKey<ScaffoldState>();
   final TextEditingController _controller = new TextEditingController();
-  String _searchText = "";
   String selectedSortModeButtonText = 'Default Ascending';
   // final List<String> sortModes = const [
   //   'Default Order',
@@ -42,21 +37,21 @@ class _NewHomePageCopy2State extends State<NewHomePageCopy2>
   final PopularMoviesApiService popularMoviesApiService =
       PopularMoviesApiService();
 
-  _NewHomePageCopy2State() {
-    _controller.addListener(() {
-      if (_controller.text.isEmpty) {
-        setState(() {
-          _isSearching = false;
-          _searchText = "";
-        });
-      } else {
-        setState(() {
-          _isSearching = true;
-          _searchText = _controller.text;
-        });
-      }
-    });
-  }
+  // _NewHomePageCopy2State() {
+  //   _controller.addListener(() {
+  //     if (_controller.text.isEmpty) {
+  //       setState(() {
+  //         _isSearching = false;
+  //         _searchText = "";
+  //       });
+  //     } else {
+  //       setState(() {
+  //         _isSearching = true;
+  //         _searchText = _controller.text;
+  //       });
+  //     }
+  //   });
+  // }
 
   Future<void> getPopularMovies() async {
     Response response = await popularMoviesApiService.fetchMovies();
@@ -122,26 +117,25 @@ class _NewHomePageCopy2State extends State<NewHomePageCopy2>
                                       });
   }
 
-  void _updateWidget() {
-    setState(() {
-      _widgetId = _widgetId == 1 ? 2 : 1;
-    });
-  }
+  // void _updateWidget() {
+  //   setState(() {
+  //     _widgetId = _widgetId == 1 ? 2 : 1;
+  //   });
+  // }
 
-  Widget _renderWidget() {
-    return _widgetId == 1 ? _sortWidget() : _searchWidget();
-  }
+  // Widget _renderWidget() {
+  //   return _widgetId == 1 ? _sortWidget() : _searchWidget();
+  // }
 
-  _searchFor(String query) {
-    searchedItems.clear();
-    if (_isSearching != null) {}
-  }
+  // _searchFor(String query) {
+  //   searchedItems.clear();
+  //   if (_isSearching != null) {}
+  // }
 
   @override
   void initState() {
     getPopularMovies();
     print('isDataRecieved : $isDataRecieved');
-    _isSearching = false;
     super.initState();
   }
 
@@ -611,174 +605,174 @@ class _NewHomePageCopy2State extends State<NewHomePageCopy2>
     );
   }
 
-  Widget _sortWidget() {
-    return Container(
-      key: Key('sort'),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        color: Colors.white,
-      ),
-      height: AppBar().preferredSize.height,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: Row(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(
-              'Sort by : ',
-              // minFontSize: 12,
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            MaterialButton(
-              child: AutoSizeText(
-                selectedSortModeButtonText,
-                minFontSize: 16,
-                style: TextStyle(
-                  // fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              // padding: EdgeInsets.zero,
-              color: Colors.grey[300],
-              shape: StadiumBorder(),
-              // shape: ContinuousRectangleBorder(
-              //   borderRadius: BorderRadius.circular(15),
-              // ),
-              minWidth: MediaQuery.of(context).size.width * 0.4,
-              elevation: 0,
-              highlightElevation: 0,
-              onPressed: () {
-                showModalBottomSheet<String>(
-                  context: context,
-                  builder: (builder) => SortModesBottomSheet(),
-                  backgroundColor: Colors.transparent,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(15),
-                    ),
-                  ),
-                  // shape: ContinuousRectangleBorder(
-                  //   borderRadius: BorderRadius.all(
-                  //     Radius.circular(15),
-                  //   ),
-                  // ),
-                  // elevation: 50,
-                  isScrollControlled: true,
-                  transitionAnimationController: AnimationController(
-                    vsync: this,
-                    duration: Duration(milliseconds: 1000),
-                    reverseDuration: Duration(milliseconds: 500),
-                  ),
-                  // elevation: 5,
-                ).then((selectedSortOption) {
-                  print('selectedSortOption home : $selectedSortOption');
-                  selectedSortOption == null
-                      ? sortFetchedPopularMovies(mode: 'Default Ascending')
-                      : sortFetchedPopularMovies(mode: selectedSortOption);
-                  setState(() {
-                    selectedSortModeButtonText = selectedSortOption!;
-                  });
-                });
-              },
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  // Widget _sortWidget() {
+  //   return Container(
+  //     key: Key('sort'),
+  //     decoration: BoxDecoration(
+  //       borderRadius: BorderRadius.circular(10),
+  //       color: Colors.white,
+  //     ),
+  //     height: AppBar().preferredSize.height,
+  //     child: Padding(
+  //       padding: const EdgeInsets.symmetric(horizontal: 20),
+  //       child: Row(
+  //         mainAxisSize: MainAxisSize.max,
+  //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //         crossAxisAlignment: CrossAxisAlignment.center,
+  //         children: [
+  //           Text(
+  //             'Sort by : ',
+  //             // minFontSize: 12,
+  //             style: TextStyle(
+  //               fontSize: 16,
+  //               fontWeight: FontWeight.bold,
+  //             ),
+  //           ),
+  //           MaterialButton(
+  //             child: AutoSizeText(
+  //               selectedSortModeButtonText,
+  //               minFontSize: 16,
+  //               style: TextStyle(
+  //                 // fontSize: 16,
+  //                 fontWeight: FontWeight.bold,
+  //               ),
+  //             ),
+  //             // padding: EdgeInsets.zero,
+  //             color: Colors.grey[300],
+  //             shape: StadiumBorder(),
+  //             // shape: ContinuousRectangleBorder(
+  //             //   borderRadius: BorderRadius.circular(15),
+  //             // ),
+  //             minWidth: MediaQuery.of(context).size.width * 0.4,
+  //             elevation: 0,
+  //             highlightElevation: 0,
+  //             onPressed: () {
+  //               showModalBottomSheet<String>(
+  //                 context: context,
+  //                 builder: (builder) => SortModesBottomSheet(),
+  //                 backgroundColor: Colors.transparent,
+  //                 shape: RoundedRectangleBorder(
+  //                   borderRadius: BorderRadius.all(
+  //                     Radius.circular(15),
+  //                   ),
+  //                 ),
+  //                 // shape: ContinuousRectangleBorder(
+  //                 //   borderRadius: BorderRadius.all(
+  //                 //     Radius.circular(15),
+  //                 //   ),
+  //                 // ),
+  //                 // elevation: 50,
+  //                 isScrollControlled: true,
+  //                 transitionAnimationController: AnimationController(
+  //                   vsync: this,
+  //                   duration: Duration(milliseconds: 1000),
+  //                   reverseDuration: Duration(milliseconds: 500),
+  //                 ),
+  //                 // elevation: 5,
+  //               ).then((selectedSortOption) {
+  //                 print('selectedSortOption home : $selectedSortOption');
+  //                 selectedSortOption == null
+  //                     ? sortFetchedPopularMovies(mode: 'Default Ascending')
+  //                     : sortFetchedPopularMovies(mode: selectedSortOption);
+  //                 setState(() {
+  //                   selectedSortModeButtonText = selectedSortOption!;
+  //                 });
+  //               });
+  //             },
+  //           ),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
 
-  Widget _searchWidget() {
-    return Container(
-      key: Key('search'),
-      height: AppBar().preferredSize.height,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: TextField(
-          controller: _controller,
-          minLines: 1,
-          maxLines: 1,
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-            textBaseline: TextBaseline.alphabetic,
-          ),
-          textAlignVertical: TextAlignVertical.center,
-          cursorHeight: 20,
-          textAlign: TextAlign.start,
-          decoration: InputDecoration(
-            prefixIcon: Icon(
-              Icons.search_rounded,
-              color: Colors.black,
-            ),
-            // icon: Icon(
-            //   Icons.search_rounded,
-            //   color: Colors.black,
-            // ),
-            // contentPadding: EdgeInsets.zero,
-            // border: InputBorder.none,
-            // focusedBorder: InputBorder.none,
-            // enabledBorder: InputBorder.none,
-            // errorBorder: InputBorder.none,
-            // disabledBorder: InputBorder.none,
-            // contentPadding:
-            //     EdgeInsets.only(left: 15, bottom: 11, top: 11, right: 15),
-            // hintText: "Hint here",
-            hintStyle: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              textBaseline: TextBaseline.alphabetic,
-            ),
-          ),
-          onChanged: (searchedQuery) => _searchFor(searchedQuery),
-        ),
-        // TextField(
-        //   controller: _controller,
-        //   minLines: 1,
-        //   maxLines: 1,
-        //   style: TextStyle(
-        //     fontSize: 16,
-        //     fontWeight: FontWeight.bold,
-        //     textBaseline: TextBaseline.alphabetic,
-        //   ),
-        //   textAlignVertical: TextAlignVertical.center,
-        //   cursorHeight: 20,
-        //   textAlign: TextAlign.start,
-        //   decoration: InputDecoration(
-        //     prefixIcon: Icon(
-        //       Icons.search_rounded,
-        //       color: Colors.black,
-        //     ),
-        //     // icon: Icon(
-        //     //   Icons.search_rounded,
-        //     //   color: Colors.black,
-        //     // ),
-        //     // contentPadding: EdgeInsets.zero,
-        //     border: OutlineInputBorder(
-        //       borderRadius: BorderRadius.circular(10),
-        //     ),
-        //     // focusedBorder: InputBorder.none,
-        //     // enabledBorder: InputBorder.none,
-        //     // errorBorder: InputBorder.none,
-        //     // disabledBorder: InputBorder.none,
-        //     // contentPadding:
-        //     //     EdgeInsets.only(left: 15, bottom: 11, top: 11, right: 15),
-        //     // hintText: "Hint here",
-        //     hintStyle: TextStyle(
-        //       fontSize: 16,
-        //       fontWeight: FontWeight.bold,
-        //       textBaseline: TextBaseline.alphabetic,
-        //     ),
-        //   ),
-        //   onChanged: (searchedQuery) => _searchFor(searchedQuery),
-        // ),
-      ),
-    );
-  }
+  // Widget _searchWidget() {
+  //   return Container(
+  //     key: Key('search'),
+  //     height: AppBar().preferredSize.height,
+  //     child: Padding(
+  //       padding: const EdgeInsets.symmetric(horizontal: 20),
+  //       child: TextField(
+  //         controller: _controller,
+  //         minLines: 1,
+  //         maxLines: 1,
+  //         style: TextStyle(
+  //           fontSize: 16,
+  //           fontWeight: FontWeight.bold,
+  //           textBaseline: TextBaseline.alphabetic,
+  //         ),
+  //         textAlignVertical: TextAlignVertical.center,
+  //         cursorHeight: 20,
+  //         textAlign: TextAlign.start,
+  //         decoration: InputDecoration(
+  //           prefixIcon: Icon(
+  //             Icons.search_rounded,
+  //             color: Colors.black,
+  //           ),
+  //           // icon: Icon(
+  //           //   Icons.search_rounded,
+  //           //   color: Colors.black,
+  //           // ),
+  //           // contentPadding: EdgeInsets.zero,
+  //           // border: InputBorder.none,
+  //           // focusedBorder: InputBorder.none,
+  //           // enabledBorder: InputBorder.none,
+  //           // errorBorder: InputBorder.none,
+  //           // disabledBorder: InputBorder.none,
+  //           // contentPadding:
+  //           //     EdgeInsets.only(left: 15, bottom: 11, top: 11, right: 15),
+  //           // hintText: "Hint here",
+  //           hintStyle: TextStyle(
+  //             fontSize: 16,
+  //             fontWeight: FontWeight.bold,
+  //             textBaseline: TextBaseline.alphabetic,
+  //           ),
+  //         ),
+  //         onChanged: (searchedQuery) => _searchFor(searchedQuery),
+  //       ),
+  //       // TextField(
+  //       //   controller: _controller,
+  //       //   minLines: 1,
+  //       //   maxLines: 1,
+  //       //   style: TextStyle(
+  //       //     fontSize: 16,
+  //       //     fontWeight: FontWeight.bold,
+  //       //     textBaseline: TextBaseline.alphabetic,
+  //       //   ),
+  //       //   textAlignVertical: TextAlignVertical.center,
+  //       //   cursorHeight: 20,
+  //       //   textAlign: TextAlign.start,
+  //       //   decoration: InputDecoration(
+  //       //     prefixIcon: Icon(
+  //       //       Icons.search_rounded,
+  //       //       color: Colors.black,
+  //       //     ),
+  //       //     // icon: Icon(
+  //       //     //   Icons.search_rounded,
+  //       //     //   color: Colors.black,
+  //       //     // ),
+  //       //     // contentPadding: EdgeInsets.zero,
+  //       //     border: OutlineInputBorder(
+  //       //       borderRadius: BorderRadius.circular(10),
+  //       //     ),
+  //       //     // focusedBorder: InputBorder.none,
+  //       //     // enabledBorder: InputBorder.none,
+  //       //     // errorBorder: InputBorder.none,
+  //       //     // disabledBorder: InputBorder.none,
+  //       //     // contentPadding:
+  //       //     //     EdgeInsets.only(left: 15, bottom: 11, top: 11, right: 15),
+  //       //     // hintText: "Hint here",
+  //       //     hintStyle: TextStyle(
+  //       //       fontSize: 16,
+  //       //       fontWeight: FontWeight.bold,
+  //       //       textBaseline: TextBaseline.alphabetic,
+  //       //     ),
+  //       //   ),
+  //       //   onChanged: (searchedQuery) => _searchFor(searchedQuery),
+  //       // ),
+  //     ),
+  //   );
+  // }
 
   Widget _searchListView(int index) {
     return Padding(

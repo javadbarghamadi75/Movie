@@ -3,9 +3,7 @@ import 'package:lottie/lottie.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:movie/models/popular_movies_model.dart';
-import 'package:movie/pages/image_page.dart';
 import 'package:movie/services/popular_movies_service.dart';
-import 'package:http/http.dart' as http;
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:movie/sheets/sort_modal_bottom_sheet.dart';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -27,7 +25,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   List<Item> searchedItems = <Item>[];
   final globalKey = new GlobalKey<ScaffoldState>();
   final TextEditingController _controller = new TextEditingController();
-  String _searchText = "";
   String selectedSortModeButtonText = 'Default Ascending';
   // final List<String> sortModes = const [
   //   'Default Order',
@@ -41,21 +38,21 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   final PopularMoviesApiService popularMoviesApiService =
       PopularMoviesApiService();
 
-  _HomePageState() {
-    _controller.addListener(() {
-      if (_controller.text.isEmpty) {
-        setState(() {
-          _isSearching = false;
-          _searchText = "";
-        });
-      } else {
-        setState(() {
-          _isSearching = true;
-          _searchText = _controller.text;
-        });
-      }
-    });
-  }
+  // _HomePageState() {
+  //   _controller.addListener(() {
+  //     if (_controller.text.isEmpty) {
+  //       setState(() {
+  //         _isSearching = false;
+  //         _searchText = "";
+  //       });
+  //     } else {
+  //       setState(() {
+  //         _isSearching = true;
+  //         _searchText = _controller.text;
+  //       });
+  //     }
+  //   });
+  // }
 
   Future<void> getPopularMovies() async {
     Response response = await popularMoviesApiService.fetchMovies();

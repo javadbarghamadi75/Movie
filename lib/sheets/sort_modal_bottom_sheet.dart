@@ -84,7 +84,7 @@ class _SortModesBottomSheetState extends State<SortModesBottomSheet> {
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
-                          color: Colors.white38,
+                          color: Colors.amber[900],
                         ),
                       ),
                     ),
@@ -128,14 +128,15 @@ class _SortModesBottomSheetState extends State<SortModesBottomSheet> {
                           Text(
                             'Order',
                             style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white38),
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.amber[900],
+                            ),
                           ),
                           SizedBox(width: 20),
                           Expanded(
                             child: Divider(
-                              color: Colors.white38,
+                              color: Colors.amber[900],
                               // thickness: 0.60,
                             ),
                           ),
