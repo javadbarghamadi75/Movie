@@ -8,16 +8,16 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:movie/sheets/sort_modal_bottom_sheet.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 
-class NewHomePageCopy3 extends StatefulWidget {
+class NewHomePageCopy5 extends StatefulWidget {
   final String title;
 
-  const NewHomePageCopy3({Key? key, required this.title}) : super(key: key);
+  const NewHomePageCopy5({Key? key, required this.title}) : super(key: key);
 
   @override
-  _NewHomePageCopy3State createState() => _NewHomePageCopy3State();
+  _NewHomePageCopy5State createState() => _NewHomePageCopy5State();
 }
 
-class _NewHomePageCopy3State extends State<NewHomePageCopy3>
+class _NewHomePageCopy5State extends State<NewHomePageCopy5>
     with TickerProviderStateMixin {
   bool isDataRecieved = false;
   List<Item> items = <Item>[];
@@ -143,7 +143,7 @@ class _NewHomePageCopy3State extends State<NewHomePageCopy3>
         brightness: Brightness.dark,
         elevation: 0,
         backgroundColor: Colors.grey[900], //amber
-        toolbarHeight: AppBar().preferredSize.height,
+        toolbarHeight: AppBar().preferredSize.height * 2,
         centerTitle: true,
         title: Card(
           shape: ContinuousRectangleBorder(
@@ -188,6 +188,73 @@ class _NewHomePageCopy3State extends State<NewHomePageCopy3>
             ),
           ),
         ),
+        bottom: PreferredSize(
+          preferredSize: AppBar().preferredSize,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 25),
+            child: Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    AutoSizeText(
+                      'Popular Movies',
+                      minFontSize: 12,
+                      maxFontSize: 20,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w900,
+                        // fontSize: 20,
+                        color: Colors.white,
+                      ),
+                    ),
+                    SizedBox(width: 10),
+                    Chip(
+                      label: AutoSizeText(
+                        'Top ${items.length}',
+                        minFontSize: 8,
+                        maxFontSize: 14,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          // fontSize: 14,
+                          fontWeight: FontWeight.w900,
+                          color: Colors.black,
+                        ),
+                      ),
+                      backgroundColor: Colors.amber[900],
+                      labelPadding: EdgeInsets.symmetric(
+                        horizontal: 5,
+                        vertical: 0,
+                      ),
+                      shape: ContinuousRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      // padding: EdgeInsets.zero,
+                      visualDensity: VisualDensity.compact,
+                    ),
+                  ],
+                ),
+                FloatingActionButton(
+                  mini: true,
+                  tooltip: 'View Mode',
+                  elevation: 0,
+                  highlightElevation: 0,
+                  child: Icon(
+                    Icons.grid_view,
+                    color: Colors.grey[600],
+                    size: 28,
+                  ),
+                  backgroundColor: Colors.transparent,
+                  onPressed: () {},
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
       backgroundColor: Colors.grey[900], //grey[50]
       // extendBodyBehindAppBar: true,
@@ -211,7 +278,7 @@ class _NewHomePageCopy3State extends State<NewHomePageCopy3>
             return Padding(
               padding: EdgeInsets.symmetric(
                 horizontal: 30,
-                vertical: 15,
+                vertical: 0,
               ),
               child: Column(
                 mainAxisSize: MainAxisSize.max,
@@ -235,67 +302,71 @@ class _NewHomePageCopy3State extends State<NewHomePageCopy3>
                                 fit: BoxFit.cover,
                               ),
                             )
-                          : Row(
-                              mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Row(
-                                  mainAxisSize: MainAxisSize.max,
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    AutoSizeText(
-                                      'Popular Movies',
-                                      minFontSize: 12,
-                                      maxFontSize: 20,
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w900,
-                                        // fontSize: 20,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                    SizedBox(width: 10),
-                                    Chip(
-                                      label: AutoSizeText(
-                                        'Top ${items.length}',
-                                        minFontSize: 8,
-                                        maxFontSize: 14,
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                          // fontSize: 14,
-                                          fontWeight: FontWeight.w900,
-                                          color: Colors.black,
-                                        ),
-                                      ),
-                                      backgroundColor: Colors.amber[900],
-                                      labelPadding: EdgeInsets.symmetric(
-                                        horizontal: 5,
-                                        vertical: 0,
-                                      ),
-                                      shape: ContinuousRectangleBorder(
-                                        borderRadius: BorderRadius.circular(20),
-                                      ),
-                                      // padding: EdgeInsets.zero,
-                                      visualDensity: VisualDensity.compact,
-                                    ),
-                                  ],
-                                ),
-                                FloatingActionButton(
-                                  mini: true,
-                                  tooltip: 'View Mode',
-                                  elevation: 0,
-                                  highlightElevation: 0,
-                                  child: Icon(
-                                    Icons.grid_view,
-                                    color: Colors.grey[600],
-                                    size: 28,
-                                  ),
-                                  backgroundColor: Colors.transparent,
-                                  onPressed: () {},
-                                ),
-                              ],
+                          : Container(
+                              height: 0,
+                              width: 0,
                             ),
+                      // Row(
+                      //     mainAxisSize: MainAxisSize.max,
+                      //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      //     crossAxisAlignment: CrossAxisAlignment.center,
+                      //     children: [
+                      //       Row(
+                      //         mainAxisSize: MainAxisSize.max,
+                      //         mainAxisAlignment: MainAxisAlignment.start,
+                      //         crossAxisAlignment: CrossAxisAlignment.center,
+                      //         children: [
+                      //           AutoSizeText(
+                      //             'Popular Movies',
+                      //             minFontSize: 12,
+                      //             maxFontSize: 20,
+                      //             style: TextStyle(
+                      //               fontWeight: FontWeight.w900,
+                      //               // fontSize: 20,
+                      //               color: Colors.white,
+                      //             ),
+                      //           ),
+                      //           SizedBox(width: 10),
+                      //           Chip(
+                      //             label: AutoSizeText(
+                      //               'Top ${items.length}',
+                      //               minFontSize: 8,
+                      //               maxFontSize: 14,
+                      //               textAlign: TextAlign.center,
+                      //               style: TextStyle(
+                      //                 // fontSize: 14,
+                      //                 fontWeight: FontWeight.w900,
+                      //                 color: Colors.black,
+                      //               ),
+                      //             ),
+                      //             backgroundColor: Colors.amber[900],
+                      //             labelPadding: EdgeInsets.symmetric(
+                      //               horizontal: 5,
+                      //               vertical: 0,
+                      //             ),
+                      //             shape: ContinuousRectangleBorder(
+                      //               borderRadius: BorderRadius.circular(20),
+                      //             ),
+                      //             // padding: EdgeInsets.zero,
+                      //             visualDensity: VisualDensity.compact,
+                      //           ),
+                      //         ],
+                      //       ),
+                      //       FloatingActionButton(
+                      //         mini: true,
+                      //         tooltip: 'View Mode',
+                      //         elevation: 0,
+                      //         highlightElevation: 0,
+                      //         child: Icon(
+                      //           Icons.grid_view,
+                      //           color: Colors.grey[600],
+                      //           size: 28,
+                      //         ),
+                      //         backgroundColor: Colors.transparent,
+                      //         onPressed: () {},
+                      //       ),
+                      //     ],
+                      //   ),
                     ],
                   )
                 ],

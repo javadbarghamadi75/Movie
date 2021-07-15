@@ -172,7 +172,13 @@ class _SortModesBottomSheetState extends State<SortModesBottomSheet> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         MaterialButton(
-                          child: Text('Dismiss'),
+                          visualDensity: VisualDensity.comfortable,
+                          child: Text(
+                            'Dismiss',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                           textColor: Colors.amber[900],
                           shape: ContinuousRectangleBorder(
                             borderRadius: BorderRadius.circular(15),
@@ -196,7 +202,13 @@ class _SortModesBottomSheetState extends State<SortModesBottomSheet> {
                         ),
                         SizedBox(width: 15),
                         MaterialButton(
-                          child: Text('Done'),
+                          visualDensity: VisualDensity.comfortable,
+                          child: Text(
+                            'Done',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                           color: Colors.amber[900],
                           shape: ContinuousRectangleBorder(
                             borderRadius: BorderRadius.circular(15),

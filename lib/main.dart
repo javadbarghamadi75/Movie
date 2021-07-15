@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:movie/pages/new_home_page%20copy%203.dart';
+import 'package:movie/pages/new_home_page%20copy%204.dart';
+import 'package:movie/pages/new_home_page%20copy%205.dart';
+import 'package:movie/pages/new_home_page%20copy%206.dart';
 
 void main() {
   runApp(MyApp());
@@ -31,7 +34,7 @@ class MyApp extends StatelessWidget {
         ),
         unselectedWidgetColor: Colors.white60,
       ),
-      home: NewHomePageCopy3(title: 'Home Page'),
+      home: NewHomePageCopy6(title: 'Home Page'),
     );
   }
 }
