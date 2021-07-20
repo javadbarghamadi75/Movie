@@ -29,11 +29,11 @@ class _NewHomePageCopy6State extends State<NewHomePageCopy6>
   final TextEditingController _textController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
   String selectedSortModeButtonText = 'Default Ascending';
-  final PopularMoviesApiService popularMoviesApiService =
+  final PopularMoviesApiService _popularMoviesApiService =
       PopularMoviesApiService();
 
   Future<void> getPopularMovies() async {
-    Response response = await popularMoviesApiService.fetchMovies();
+    Response response = await _popularMoviesApiService.fetchMovies();
     //     .then((response) {
     //   if (response.statusCode == 200) {
     //     final Map<String, dynamic> jsonResponse = jsonDecode(response.body);
