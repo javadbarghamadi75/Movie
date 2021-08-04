@@ -850,8 +850,10 @@ class _NewHomePageCopy6State extends State<NewHomePageCopy6>
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (_) =>
-                            TrailerPage(movieId: items[index].id.toString()),
+                        builder: (_) => TrailerPage(
+                          movieId: items[index].id.toString(),
+                          movieName: items[index].title,
+                        ),
                       ),
                     );
                   },
@@ -968,8 +970,10 @@ class _NewHomePageCopy6State extends State<NewHomePageCopy6>
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (_) =>
-                      TrailerPage(movieId: items[index].id.toString()),
+                  builder: (_) => TrailerPage(
+                    movieId: items[index].id.toString(),
+                    movieName: items[index].title,
+                  ),
                 ),
               );
             },
