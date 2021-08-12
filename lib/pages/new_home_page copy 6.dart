@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:movie/models/popular_movies_model.dart';
 import 'package:movie/pages/trailer_page.dart';
+import 'package:movie/pages/trailer_page_chewie.dart';
 import 'package:movie/services/popular_movies_service.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:movie/sheets/sort_modal_bottom_sheet.dart';
@@ -850,7 +851,7 @@ class _NewHomePageCopy6State extends State<NewHomePageCopy6>
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (_) => TrailerPage(
+                        builder: (_) => TrailerPageChewie(
                           movieId: items[index].id.toString(),
                           movieName: items[index].title,
                         ),
@@ -970,7 +971,7 @@ class _NewHomePageCopy6State extends State<NewHomePageCopy6>
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (_) => TrailerPage(
+                  builder: (_) => TrailerPageChewie(
                     movieId: items[index].id.toString(),
                     movieName: items[index].title,
                   ),

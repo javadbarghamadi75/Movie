@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:movie/models/trailer_model.dart';
+import 'package:movie/pages/chewie_item.dart';
 import 'package:movie/services/trailer_service.dart';
 import 'package:video_player/video_player.dart';
 import 'package:http/http.dart';
@@ -14,28 +15,28 @@ import 'package:dio/dio.dart';
 // import 'package:html/dom_parsing.dart';
 // import 'package:html/parser.dart';
 
-class TrailerPage extends StatefulWidget {
+class TrailerPageChewie extends StatefulWidget {
   final String movieId;
   final String movieName;
 
-  TrailerPage({
+  TrailerPageChewie({
     required this.movieId,
     required this.movieName,
   });
 
   @override
-  _TrailerPageState createState() => _TrailerPageState();
+  _TrailerPageChewieState createState() => _TrailerPageChewieState();
 }
 
-class _TrailerPageState extends State<TrailerPage> {
+class _TrailerPageChewieState extends State<TrailerPageChewie> {
   late var videoDir;
   late var videoFile;
-  late File fileVideo;
+  File fileVideo = File('');
   bool isDataRecieved = false;
   late String fetchedTrailerId;
   final TrailerApiService _trailerApiService = TrailerApiService();
   VideoPlayerController? _videoPlayerController =
-      VideoPlayerController.asset('dataSource');
+  VideoPlayerController.asset('dataSource');
 
   ///===========================================================================
 
@@ -75,7 +76,10 @@ class _TrailerPageState extends State<TrailerPage> {
     print('videoDir : $videoDir');
     print('videoFile : $videoFile');
     print('$videoDir/myFile.mp4');
-    fileVideo = File('$videoDir/${widget.movieName}.mp4');
+    setState(() {
+      fileVideo = File('$videoDir/${widget.movieName}.mp4');
+    });
+    // fileVideo = File('$videoDir/${widget.movieName}.mp4');
     _getVideoFromNetwork(file: fileVideo);
   }
 
@@ -101,13 +105,16 @@ class _TrailerPageState extends State<TrailerPage> {
     _getVideoHtmlTag(videoId: fetchedTrailerId);
   }
 
-  Future<void> _getVideoFromNetwork({required File file}) async {
-    _videoPlayerController = VideoPlayerController.file(file,
-        videoPlayerOptions: VideoPlayerOptions())
+  Future<VideoPlayerController> _getVideoFromNetwork({required File file}) async {
+    return _videoPlayerController = VideoPlayerController.file(file)
       ..addListener(() => setState(() {}))
       ..setLooping(true)
       ..initialize().then((_) => _videoPlayerController?.play());
   }
+
+  // _getVideoFromNetwork({required File file}) {
+  //   _videoPlayerController = VideoPlayerController.file(file);
+  // }
 
   @override
   void dispose() {
@@ -136,63 +143,67 @@ class _TrailerPageState extends State<TrailerPage> {
       //   title: Text('The AppBar'),
       // ),
       backgroundColor: Colors.grey[900],
-      body: Center(
-        child: VideoPlayerWidget(
-          videoPlayerController: _videoPlayerController!,
-        ),
+      body: ChewieItem(
+        videoPlayerController: _videoPlayerController!,
+        looping: true,
       ),
+      // body: Center(
+      //   child: VideoPlayerWidget(
+      //     videoPlayerController: _videoPlayerController!,
+      //   ),
+      // ),
     );
   }
 }
 
-class VideoPlayerWidget extends StatelessWidget {
-  final VideoPlayerController videoPlayerController;
-
-  const VideoPlayerWidget({
-    Key? key,
-    required this.videoPlayerController,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return videoPlayerController.value.isInitialized &&
-            videoPlayerController != null
-        ? Stack(
-            alignment: Alignment.center,
-            children: [
-              AspectRatio(
-                aspectRatio: videoPlayerController.value.aspectRatio,
-                child: VideoPlayer(videoPlayerController),
-              ),
-              Align(
-                alignment: Alignment.center,
-                child: FloatingActionButton(
-                  onPressed: () {
-                    // If the video is playing, pause it.
-                    if (videoPlayerController.value.isPlaying) {
-                      videoPlayerController.pause();
-                    } else {
-                      // If the video is paused, play it.
-                      videoPlayerController.play();
-                    }
-                  },
-                  child: Icon(
-                    videoPlayerController.value.isPlaying
-                        ? Icons.pause
-                        : Icons.play_arrow,
-                    size: 50,
-                    color: Colors.amber[900],
-                  ),
-                ),
-              ),
-            ],
-          )
-        : Container(
-            height: 250,
-            color: Colors.red,
-            child: Center(
-              child: CircularProgressIndicator(),
-            ),
-          );
-  }
-}
+// class VideoPlayerWidget extends StatelessWidget {
+//   final VideoPlayerController videoPlayerController;
+//
+//   const VideoPlayerWidget({
+//     Key? key,
+//     required this.videoPlayerController,
+//   }) : super(key: key);
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return videoPlayerController.value.isInitialized &&
+//             videoPlayerController != null
+//         ? Stack(
+//             alignment: Alignment.center,
+//             children: [
+//               AspectRatio(
+//                 aspectRatio: videoPlayerController.value.aspectRatio,
+//                 child: VideoPlayer(videoPlayerController),
+//               ),
+//               Align(
+//                 alignment: Alignment.center,
+//                 child: FloatingActionButton(
+//                   onPressed: () {
+//                     // If the video is playing, pause it.
+//                     if (videoPlayerController.value.isPlaying) {
+//                       videoPlayerController.pause();
+//                     } else {
+//                       // If the video is paused, play it.
+//                       videoPlayerController.play();
+//                     }
+//                   },
+//                   child: Icon(
+//                     videoPlayerController.value.isPlaying
+//                         ? Icons.pause
+//                         : Icons.play_arrow,
+//                     size: 50,
+//                     color: Colors.amber[900],
+//                   ),
+//                 ),
+//               ),
+//             ],
+//           )
+//         : Container(
+//             height: 250,
+//             color: Colors.red,
+//             child: Center(
+//               child: CircularProgressIndicator(),
+//             ),
+//           );
+//   }
+// }

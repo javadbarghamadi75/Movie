@@ -11,7 +11,7 @@ void main() {
     SystemUiOverlayStyle(
       systemNavigationBarColor: Colors.grey[900], // navigation bar color
       statusBarColor: Colors.grey[900], // status bar color
-      statusBarBrightness: Brightness.light, //status bar brigtness
+      statusBarBrightness: Brightness.light, //status bar brightness
       statusBarIconBrightness: Brightness.light, //status barIcon Brightness
       systemNavigationBarDividerColor:
           Colors.grey[900], //Navigation bar divider color
