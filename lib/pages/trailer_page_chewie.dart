@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
-
+import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:movie/models/trailer_model.dart';
@@ -35,53 +35,7 @@ class _TrailerPageChewieState extends State<TrailerPageChewie> {
   bool isDataRecieved = false;
   late String fetchedTrailerId;
   final TrailerApiService _trailerApiService = TrailerApiService();
-  VideoPlayerController? _videoPlayerController =
-  VideoPlayerController.asset('dataSource');
-
-  ///===========================================================================
-
-  _getVideoHtmlTag({required String videoId}) async {
-    var videoBaseUrl = 'https://www.imdb.com/video/imdb/$videoId/imdb/embed';
-    await get(Uri.parse(videoBaseUrl)).then((response) {
-      if (response.statusCode == 200) {
-        var soup = BeautifulSoup(response.body);
-        var data = soup.find('script', attrs: {'class': 'imdb-player-data'});
-        var videoUrl = jsonDecode(data!.text)['videoPlayerObject']['video']
-            ['videoInfoList'][1]['videoUrl'];
-        print('videoUrl : ');
-        print(videoUrl);
-        downloadVideo(videoUrl);
-      }
-    });
-  }
-
-  ///===========================================================================
-
-  ///===========================================================================
-
-  downloadVideo(String url) async {
-    Dio dio = Dio();
-
-    try {
-      var dir = await getApplicationDocumentsDirectory();
-      videoFile = await dio.download(url, "${dir.path}/${widget.movieName}.mp4",
-          onReceiveProgress: (rec, total) {
-        print("Rec: $rec , Total: $total");
-        videoDir = dir.path;
-      });
-    } catch (e) {
-      print(e);
-    }
-    print("Download completed");
-    print('videoDir : $videoDir');
-    print('videoFile : $videoFile');
-    print('$videoDir/myFile.mp4');
-    setState(() {
-      fileVideo = File('$videoDir/${widget.movieName}.mp4');
-    });
-    // fileVideo = File('$videoDir/${widget.movieName}.mp4');
-    _getVideoFromNetwork(file: fileVideo);
-  }
+  VideoPlayerController? _videoPlayerController;
 
   ///===========================================================================
 
@@ -105,16 +59,76 @@ class _TrailerPageChewieState extends State<TrailerPageChewie> {
     _getVideoHtmlTag(videoId: fetchedTrailerId);
   }
 
-  Future<VideoPlayerController> _getVideoFromNetwork({required File file}) async {
-    return _videoPlayerController = VideoPlayerController.file(file)
+  ///===========================================================================
+
+  _getVideoHtmlTag({required String videoId}) async {
+    var videoBaseUrl = 'https://www.imdb.com/video/imdb/$videoId/imdb/embed';
+    await get(Uri.parse(videoBaseUrl)).then((response) {
+      if (response.statusCode == 200) {
+        var soup = BeautifulSoup(response.body);
+        var data = soup.find('script', attrs: {'class': 'imdb-player-data'});
+        var videoUrl = jsonDecode(data!.text)['videoPlayerObject']['video']
+            ['videoInfoList'][1]['videoUrl'];
+        print('videoUrl : ');
+        print(videoUrl);
+        // _playVideo(videoUrl: videoUrl);
+        _getVideoFromNetwork(videoUrl: videoUrl);
+      }
+    });
+  }
+
+  ///===========================================================================
+
+  // _playVideo({required String videoUrl}) {
+  //   _videoPlayerController = VideoPlayerController.network(videoUrl);
+  // }
+
+  ///===========================================================================
+
+  ///===========================================================================
+
+  _getVideoFromNetwork({required String videoUrl}) {
+    _videoPlayerController = VideoPlayerController.network(videoUrl)
       ..addListener(() => setState(() {}))
       ..setLooping(true)
       ..initialize().then((_) => _videoPlayerController?.play());
   }
 
-  // _getVideoFromNetwork({required File file}) {
-  //   _videoPlayerController = VideoPlayerController.file(file);
+  ///===========================================================================
+  // downloadVideo(String url) async {
+  //   Dio dio = Dio();
+  //   try {
+  //     var dir = await getApplicationDocumentsDirectory();
+  //     videoFile = await dio.download(url, "${dir.path}/${widget.movieName}.mp4",
+  //         onReceiveProgress: (rec, total) {
+  //       print("Rec: $rec , Total: $total");
+  //       videoDir = dir.path;
+  //     });
+  //   } catch (e) {
+  //     print(e);
+  //   }
+  //   print("Download completed");
+  //   print('videoDir : $videoDir');
+  //   print('videoFile : $videoFile');
+  //   print('$videoDir/myFile.mp4');
+  //   setState(() {
+  //     fileVideo = File('$videoDir/${widget.movieName}.mp4');
+  //   });
+  //   // fileVideo = File('$videoDir/${widget.movieName}.mp4');
+  //   _getVideoFromNetwork(file: fileVideo);
   // }
+
+  ///===========================================================================
+
+  // Future<VideoPlayerController> _getVideoFromNetwork(
+  //     {required File file}) async {
+  //   return _videoPlayerController = VideoPlayerController.file(file);
+  //   // ..addListener(() => setState(() {}))
+  //   // ..setLooping(true)
+  //   // ..initialize().then((_) => _videoPlayerController?.play());
+  // }
+
+  ///===========================================================================
 
   @override
   void dispose() {
@@ -125,85 +139,90 @@ class _TrailerPageChewieState extends State<TrailerPageChewie> {
   @override
   void initState() {
     print('fetched movieId : ${widget.movieId}');
-    // _getMovieTrailer(widget.movieId)
-    //     .then((movieTrailer) =>
-    //         _getVideoFromNetwork(movieLink: movieTrailer.linkEmbed))
-    //     .whenComplete(
-    //         () => _getVideoFromNetwork(movieLink: fetchedTrailer.linkEmbed));
     _getMovieTrailerId(widget.movieId);
-    // _getVideoHtmlTag();
-    // _getVideoFromNetwork();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   title: Text('The AppBar'),
-      // ),
       backgroundColor: Colors.grey[900],
-      body: ChewieItem(
-        videoPlayerController: _videoPlayerController!,
-        looping: true,
-      ),
-      // body: Center(
-      //   child: VideoPlayerWidget(
-      //     videoPlayerController: _videoPlayerController!,
-      //   ),
-      // ),
+      body: _videoPlayerController != null
+          ? Center(
+              child: Container(
+                height: 250,
+                width: MediaQuery.of(context).size.width,
+                color: Colors.transparent,
+                child: ChewieItem(
+                  videoPlayerController: _videoPlayerController!,
+                  looping: true,
+                ),
+              ),
+            )
+          : Center(
+              child: Container(
+                height: 250,
+                width: MediaQuery.of(context).size.width,
+                color: Colors.black,
+                child: Center(
+                  child: CircularProgressIndicator(),
+                ),
+              ),
+            ),
     );
   }
 }
 
-// class VideoPlayerWidget extends StatelessWidget {
-//   final VideoPlayerController videoPlayerController;
-//
-//   const VideoPlayerWidget({
-//     Key? key,
-//     required this.videoPlayerController,
-//   }) : super(key: key);
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return videoPlayerController.value.isInitialized &&
-//             videoPlayerController != null
-//         ? Stack(
-//             alignment: Alignment.center,
-//             children: [
-//               AspectRatio(
-//                 aspectRatio: videoPlayerController.value.aspectRatio,
-//                 child: VideoPlayer(videoPlayerController),
-//               ),
-//               Align(
-//                 alignment: Alignment.center,
-//                 child: FloatingActionButton(
-//                   onPressed: () {
-//                     // If the video is playing, pause it.
-//                     if (videoPlayerController.value.isPlaying) {
-//                       videoPlayerController.pause();
-//                     } else {
-//                       // If the video is paused, play it.
-//                       videoPlayerController.play();
-//                     }
-//                   },
-//                   child: Icon(
-//                     videoPlayerController.value.isPlaying
-//                         ? Icons.pause
-//                         : Icons.play_arrow,
-//                     size: 50,
-//                     color: Colors.amber[900],
-//                   ),
-//                 ),
-//               ),
-//             ],
-//           )
-//         : Container(
-//             height: 250,
-//             color: Colors.red,
-//             child: Center(
-//               child: CircularProgressIndicator(),
-//             ),
-//           );
-//   }
-// }
+//000000000000000000000000000000000000000000000000000000000000000000000000000000
+
+class ChewieItem extends StatefulWidget {
+  final VideoPlayerController videoPlayerController;
+  final bool looping;
+
+  ChewieItem({
+    required this.videoPlayerController,
+    required this.looping,
+  });
+
+  @override
+  _ChewieItemState createState() => _ChewieItemState();
+}
+
+class _ChewieItemState extends State<ChewieItem> {
+  late ChewieController _chewieController;
+
+  @override
+  void initState() {
+    _chewieController = ChewieController(
+      videoPlayerController: widget.videoPlayerController,
+      aspectRatio: 16 / 9,
+      autoInitialize: true,
+      allowFullScreen: true,
+      showControls: true,
+      showOptions: false,
+      autoPlay: true,
+      looping: widget.looping,
+      errorBuilder: (context, errorMessage) {
+        return Center(
+          child: Text(
+            errorMessage,
+            style: TextStyle(color: Colors.white),
+          ),
+        );
+      },
+    );
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    widget.videoPlayerController.dispose();
+    _chewieController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Chewie(controller: _chewieController);
+  }
+}
