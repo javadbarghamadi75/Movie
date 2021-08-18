@@ -26,13 +26,33 @@ class _NewHomePageCopy6State extends State<NewHomePageCopy6>
   int _suffixesId = 1;
   bool isDataRecieved = false;
   List<Item> items = <Item>[];
-  List<Item> searchedItems = <Item>[];
-  final globalKey = new GlobalKey<ScaffoldState>();
+  // List<Item> searchedItems = <Item>[];
   final TextEditingController _textController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
   String selectedSortModeButtonText = 'Default Ascending';
   final PopularMoviesApiService _popularMoviesApiService =
       PopularMoviesApiService();
+
+  final globalKey = GlobalKey<ScaffoldState>();
+  late bool _isSearching;
+  String _searchText = "";
+  List searchResult = [];
+
+  _NewHomePageCopy6State() {
+    _textController.addListener(() {
+      if (_textController.text.isEmpty) {
+        setState(() {
+          _isSearching = false;
+          _searchText = "";
+        });
+      } else {
+        setState(() {
+          _isSearching = true;
+          _searchText = _textController.text;
+        });
+      }
+    });
+  }
 
   Future<void> getPopularMovies() async {
     Response response = await _popularMoviesApiService.fetchMovies();
@@ -118,6 +138,10 @@ class _NewHomePageCopy6State extends State<NewHomePageCopy6>
     return _sliversId == 1 ? _sliverList() : _sliverGrid();
   }
 
+  Widget _renderSearchSlivers() {
+    return _sliversId == 1 ? _sliverSearchList() : _sliverSearchGrid();
+  }
+
   void _updateSlivers() {
     setState(() {
       _sliversId = _sliversId == 1 ? 2 : 1;
@@ -130,6 +154,10 @@ class _NewHomePageCopy6State extends State<NewHomePageCopy6>
             onTap: () {
               print('search button tapped!');
               print('${_textController.text}');
+              setState(() {
+                _updateSuffiexs();
+                _handleSearchStart();
+              });
             },
             child: Icon(
               Icons.search_rounded,
@@ -140,10 +168,12 @@ class _NewHomePageCopy6State extends State<NewHomePageCopy6>
         : GestureDetector(
             onTap: () {
               print('close button tapped!');
-              setState(() {
-                _textController.clear();
-                _suffixesId = 1;
-              });
+              _updateSuffiexs();
+              _handleSearchEnd();
+              // setState(() {
+              //   _textController.clear();
+              //   _suffixesId = 1;
+              // });
             },
             child: Icon(
               Icons.close,
@@ -151,6 +181,31 @@ class _NewHomePageCopy6State extends State<NewHomePageCopy6>
               size: 22,
             ),
           );
+  }
+
+  void _handleSearchStart() {
+    setState(() {
+      _isSearching = true;
+    });
+  }
+
+  void _handleSearchEnd() {
+    setState(() {
+      _isSearching = false;
+      _textController.clear();
+    });
+  }
+
+  void searchOperation(String searchText) {
+    searchResult.clear();
+    if (_isSearching != null) {
+      for (int i = 0; i < items.length; i++) {
+        var data = items[i];
+        if (data.title.toLowerCase().contains(searchText.toLowerCase())) {
+          searchResult.add(data);
+        }
+      }
+    }
   }
 
   void _updateSuffiexs() {
@@ -185,6 +240,7 @@ class _NewHomePageCopy6State extends State<NewHomePageCopy6>
     //   print('initState sort');
     //   return sortFetchedPopularMovies(mode: 'Default Ascending');
     // });
+    _isSearching = false;
     super.initState();
   }
 
@@ -192,6 +248,7 @@ class _NewHomePageCopy6State extends State<NewHomePageCopy6>
   Widget build(BuildContext context) {
     //this sets the navigation bar color to green
     return Scaffold(
+      key: globalKey,
       extendBody: false,
       // appBar: AppBar(
       //   brightness: Brightness.dark,
@@ -417,6 +474,7 @@ class _NewHomePageCopy6State extends State<NewHomePageCopy6>
                 ),
                 onChanged: (value) {
                   _updateSuffiexs();
+                  searchOperation(_textController.text);
                 },
               ),
             ),
@@ -693,10 +751,15 @@ class _NewHomePageCopy6State extends State<NewHomePageCopy6>
           // ),
           // _sliverList(),
           // SliverList(
-          SliverAnimatedSwitcher(
-            duration: Duration(milliseconds: 300),
-            child: _renderSlivers(),
-          ),
+          searchResult.length != 0 || _textController.text.isNotEmpty
+              ? SliverAnimatedSwitcher(
+                  duration: Duration(milliseconds: 300),
+                  child: _renderSearchSlivers(),
+                )
+              : SliverAnimatedSwitcher(
+                  duration: Duration(milliseconds: 300),
+                  child: _renderSlivers(),
+                ),
           //   delegate: SliverChildBuilderDelegate(
           //     (context, index) {
           //       print('index : $index');
@@ -933,7 +996,7 @@ class _NewHomePageCopy6State extends State<NewHomePageCopy6>
               ),
             );
           }
-          return _searchListView(index);
+          return _sliverListView(index);
         },
         childCount: items.length,
       ),
@@ -953,14 +1016,14 @@ class _NewHomePageCopy6State extends State<NewHomePageCopy6>
               ),
             );
           }
-          return _searchGridView(index);
+          return _sliverGridView(index);
         },
         childCount: items.length,
       ),
     );
   }
 
-  Widget _searchListView(int index) {
+  Widget _sliverListView(int index) {
     return Padding(
       padding: EdgeInsets.symmetric(
         horizontal: 25,
@@ -1122,7 +1185,7 @@ class _NewHomePageCopy6State extends State<NewHomePageCopy6>
     );
   }
 
-  Widget _searchGridView(int index) {
+  Widget _sliverGridView(int index) {
     return Padding(
       padding: EdgeInsets.symmetric(
         horizontal: 25,
@@ -1245,6 +1308,339 @@ class _NewHomePageCopy6State extends State<NewHomePageCopy6>
                                 )
                               : Text(
                                   items[index].imDbRating,
+                                  style: TextStyle(
+                                    color: Colors.white70,
+                                  ),
+                                ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Divider(
+            indent: 125,
+            endIndent: 125,
+            color: Colors.grey[400],
+            // height: 10,
+            // thickness: 1,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _sliverSearchList() {
+    return SliverList(
+      delegate: SliverChildBuilderDelegate(
+        (context, index) {
+          // Item listData = searchResult[index];
+          return _sliverSearchListView(index);
+        },
+        childCount: searchResult.length,
+      ),
+    );
+  }
+
+  Widget _sliverSearchGrid() {
+    return SliverList(
+      delegate: SliverChildBuilderDelegate(
+        (context, index) {
+          // Item listData = searchResult[index];
+          return _sliverSearchGridView(index);
+        },
+        childCount: searchResult.length,
+      ),
+    );
+  }
+
+  Widget _sliverSearchListView(int index) {
+    return Padding(
+      padding: EdgeInsets.symmetric(
+        horizontal: 25,
+        // vertical: 10,
+      ),
+      child: Column(
+        children: [
+          Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(10),
+                  bottomLeft: Radius.circular(10),
+                  topRight: Radius.circular(10),
+                  bottomRight: Radius.circular(10),
+                ),
+                child: CachedNetworkImage(
+                  alignment: Alignment.center,
+                  placeholder: (context, url) => Container(
+                    color: Colors.grey.withOpacity(0.3),
+                    padding: EdgeInsets.zero,
+                    child: Icon(
+                      Icons.local_movies_rounded,
+                      size: 80,
+                      color: Colors.grey,
+                    ),
+                  ),
+                  imageUrl: searchResult[index].image,
+                  // items[index - 1].image,
+                  fit: BoxFit.cover,
+                  filterQuality: FilterQuality.high, //was high
+                  height: MediaQuery.of(context).size.height * 0.2, // 150
+                  width: MediaQuery.of(context).size.height * 0.13, // 109
+                ),
+              ),
+              Flexible(
+                child: InkWell(
+                  key: Key('listViewInkWell'),
+                  borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(10),
+                    bottomRight: Radius.circular(10),
+                  ),
+                  onTap: () {
+                    print('${searchResult[index].id}');
+                    // Navigator.of(context).push(
+                    //   MaterialPageRoute(
+                    //     builder: (_) => TrailerPage(),
+                    //   ),
+                    // );
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => TrailerPageChewie(
+                          movieId: searchResult[index].id.toString(),
+                          movieName: searchResult[index].title,
+                        ),
+                      ),
+                    );
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.grey.withOpacity(0.1),
+                      borderRadius: BorderRadius.only(
+                        topRight: Radius.circular(10),
+                        bottomRight: Radius.circular(10),
+                      ),
+                    ),
+                    // padding: EdgeInsets.only(left: 5),
+                    height:
+                        MediaQuery.of(context).size.height * 0.2 - 20, // 130
+                    width: MediaQuery.of(context).size.width,
+                    child: ListTile(
+                      // contentPadding: EdgeInsets.symmetric(
+                      //   horizontal: 16.0,
+                      //   vertical: 8,
+                      // ),
+                      // focusColor: Colors.transparent,
+                      // hoverColor: Colors.transparent,
+                      // tileColor: Colors.transparent,
+                      title: Padding(
+                        padding: EdgeInsets.only(top: 16),
+                        child: AutoSizeText(
+                          searchResult[index].title,
+                          maxLines: 2,
+                          minFontSize: 12,
+                          maxFontSize: 16,
+                          textAlign: TextAlign.left,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            // fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white.withOpacity(0.8),
+                          ),
+                        ),
+                      ),
+                      subtitle: Padding(
+                        padding: EdgeInsets.only(top: 16),
+                        child: AutoSizeText(
+                          searchResult[index].year,
+                          maxLines: 1,
+                          minFontSize: 12,
+                          maxFontSize: 16,
+                          textAlign: TextAlign.left,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            // fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white38,
+                          ),
+                        ),
+                      ),
+                      trailing: Column(
+                        // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          searchResult[index].imDbRating == ''
+                              ? Icon(
+                                  Icons.grade_rounded,
+                                  color: Colors.amber[900],
+                                )
+                              : Icon(
+                                  Icons.grade_rounded,
+                                  color: Colors.amber[900],
+                                ),
+                          SizedBox(height: 5),
+                          searchResult[index].imDbRating == ''
+                              ? Text(
+                                  'N/A',
+                                  style: TextStyle(
+                                    color: Colors.white70,
+                                    fontSize: 12,
+                                  ),
+                                )
+                              : Text(
+                                  searchResult[index].imDbRating,
+                                  style: TextStyle(
+                                    color: Colors.white70,
+                                  ),
+                                ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Divider(
+            indent: 125,
+            endIndent: 125,
+            color: Colors.grey[400],
+            // height: 10,
+            // thickness: 1,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _sliverSearchGridView(int index) {
+    return Padding(
+      padding: EdgeInsets.symmetric(
+        horizontal: 25,
+        // vertical: 10,
+      ),
+      child: Column(
+        children: [
+          InkWell(
+            key: Key('gridViewInkWell'),
+            onTap: () {
+              print('${searchResult[index].id}');
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => TrailerPageChewie(
+                    movieId: searchResult[index].id.toString(),
+                    movieName: searchResult[index].title,
+                  ),
+                ),
+              );
+            },
+            child: Stack(
+              alignment: AlignmentDirectional.bottomCenter,
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(10),
+                    bottomLeft: Radius.circular(10),
+                    topRight: Radius.circular(10),
+                    bottomRight: Radius.circular(10),
+                  ),
+                  child: CachedNetworkImage(
+                    alignment: Alignment.center,
+                    placeholder: (context, url) => Container(
+                      color: Colors.grey.withOpacity(0.3),
+                      padding: EdgeInsets.zero,
+                      child: Icon(
+                        Icons.local_movies_rounded,
+                        size: 80,
+                        color: Colors.grey,
+                      ),
+                    ),
+                    imageUrl: searchResult[index].image,
+                    // items[index - 1].image,
+                    fit: BoxFit.cover,
+                    filterQuality: FilterQuality.high, //was high
+                    height: MediaQuery.of(context).size.height * 0.7, // 150
+                    width: MediaQuery.of(context).size.height * 0.5, // 109
+                  ),
+                ),
+                ClipRRect(
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(10),
+                    bottomRight: Radius.circular(10),
+                  ),
+                  child: Container(
+                    color: Colors.black.withOpacity(0.9),
+                    height: 100,
+                    width: double.infinity,
+                    child: ListTile(
+                      // contentPadding: EdgeInsets.symmetric(
+                      //   horizontal: 16.0,
+                      //   vertical: 8,
+                      // ),
+                      // focusColor: Colors.transparent,
+                      // hoverColor: Colors.transparent,
+                      // tileColor: Colors.transparent,
+                      title: Padding(
+                        padding: EdgeInsets.only(top: 16),
+                        child: AutoSizeText(
+                          searchResult[index].title,
+                          maxLines: 2,
+                          minFontSize: 12,
+                          maxFontSize: 16,
+                          textAlign: TextAlign.left,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            // fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white.withOpacity(0.8),
+                          ),
+                        ),
+                      ),
+                      subtitle: Padding(
+                        padding: const EdgeInsets.only(top: 16),
+                        child: AutoSizeText(
+                          searchResult[index].year,
+                          maxLines: 1,
+                          minFontSize: 12,
+                          maxFontSize: 16,
+                          textAlign: TextAlign.left,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            // fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white38,
+                          ),
+                        ),
+                      ),
+                      trailing: Column(
+                        // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          searchResult[index].imDbRating == ''
+                              ? Icon(
+                                  Icons.grade_rounded,
+                                  color: Colors.amber[900],
+                                )
+                              : Icon(
+                                  Icons.grade_rounded,
+                                  color: Colors.amber[900],
+                                ),
+                          SizedBox(height: 5),
+                          searchResult[index].imDbRating == ''
+                              ? Text(
+                                  'N/A',
+                                  style: TextStyle(
+                                    color: Colors.white70,
+                                    fontSize: 12,
+                                  ),
+                                )
+                              : Text(
+                                  searchResult[index].imDbRating,
                                   style: TextStyle(
                                     color: Colors.white70,
                                   ),
