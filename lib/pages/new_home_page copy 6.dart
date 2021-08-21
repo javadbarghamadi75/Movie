@@ -1133,129 +1133,124 @@ class _NewHomePageCopy6State extends State<NewHomePageCopy6>
           padding: EdgeInsets.only(bottom: 15),
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 25),
-            child: Container(
-              color: Colors.yellow,
-              child: Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(left: 10),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        _isSearching == false
-                            ? AutoSizeText(
-                                'Popular Movies',
-                                minFontSize: 16,
-                                maxFontSize: 20,
-                                maxLines: 2,
+            child: Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(left: 10),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      _isSearching == false
+                          ? AutoSizeText(
+                              'Popular Movies',
+                              minFontSize: 16,
+                              maxFontSize: 20,
+                              maxLines: 2,
+                              style: TextStyle(
+                                fontWeight: FontWeight.w900,
+                                // fontSize: 20,
+                                color: Colors.white,
+                              ),
+                            )
+                          : AutoSizeText(
+                              _textController.text == "" ||
+                                      _textController.text.isEmpty
+                                  ? 'Popular Movies'
+                                  : searchResult.length == 1
+                                      ? 'result'
+                                      : 'resutls',
+                              minFontSize: 16,
+                              maxFontSize: 20,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontWeight: FontWeight.w900,
+                                // fontSize: 20,
+                                color: Colors.white,
+                              ),
+                            ),
+                      SizedBox(width: 10),
+                      _isSearching == false
+                          ? Chip(
+                              label: AutoSizeText(
+                                'Top ${items.length}',
+                                minFontSize: 14,
+                                maxFontSize: 16,
+                                textAlign: TextAlign.center,
                                 style: TextStyle(
+                                  // fontSize: 14,
                                   fontWeight: FontWeight.w900,
-                                  // fontSize: 20,
-                                  color: Colors.white,
-                                ),
-                              )
-                            : Container(
-                                width: MediaQuery.of(context).size.width - 178,
-                                color: Colors.blue,
-                                child: AutoSizeText(
-                                  _textController.text == "" ||
-                                          _textController.text.isEmpty
-                                      ? 'Popular Movies'
-                                      : 'Searching for : "${_textController.text}"',
-                                  minFontSize: 16,
-                                  maxFontSize: 20,
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w900,
-                                    // fontSize: 20,
-                                    color: Colors.white,
-                                  ),
+                                  color: Colors.black,
                                 ),
                               ),
-                        SizedBox(width: 10),
-                        _isSearching == false
-                            ? Chip(
-                                label: AutoSizeText(
-                                  'Top ${items.length}',
-                                  minFontSize: 14,
-                                  maxFontSize: 16,
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    // fontSize: 14,
-                                    fontWeight: FontWeight.w900,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                                backgroundColor: Colors.amber[900],
-                                labelPadding: EdgeInsets.symmetric(
-                                  horizontal: 5,
-                                  vertical: 0,
-                                ),
-                                shape: ContinuousRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                // padding: EdgeInsets.zero,
-                                visualDensity: VisualDensity.compact,
-                              )
-                            : Chip(
-                                label: AutoSizeText(
-                                  _textController.text == "" ||
-                                          _textController.text.isEmpty
-                                      ? 'Top ${items.length}'
-                                      : '${searchResult.length}',
-                                  minFontSize: 14,
-                                  maxFontSize: 16,
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    // fontSize: 14,
-                                    fontWeight: FontWeight.w900,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                                backgroundColor: Colors.amber[900],
-                                labelPadding: EdgeInsets.symmetric(
-                                  horizontal: 5,
-                                  vertical: 0,
-                                ),
-                                shape: ContinuousRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                // padding: EdgeInsets.zero,
-                                visualDensity: VisualDensity.compact,
+                              backgroundColor: Colors.amber[900],
+                              labelPadding: EdgeInsets.symmetric(
+                                horizontal: 5,
+                                vertical: 0,
                               ),
-                      ],
-                    ),
+                              shape: ContinuousRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              // padding: EdgeInsets.zero,
+                              visualDensity: VisualDensity.compact,
+                            )
+                          : Chip(
+                              label: AutoSizeText(
+                                _textController.text == "" ||
+                                        _textController.text.isEmpty
+                                    ? 'Top ${items.length}'
+                                    : '${searchResult.length}',
+                                minFontSize: 14,
+                                maxFontSize: 16,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  // fontSize: 14,
+                                  fontWeight: FontWeight.w900,
+                                  color: Colors.black,
+                                ),
+                              ),
+                              backgroundColor: Colors.amber[900],
+                              labelPadding: EdgeInsets.symmetric(
+                                horizontal: 5,
+                                vertical: 0,
+                              ),
+                              shape: ContinuousRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              // padding: EdgeInsets.zero,
+                              visualDensity: VisualDensity.compact,
+                            ),
+                    ],
                   ),
-                  FloatingActionButton(
-                    heroTag: 'changeUI',
-                    mini: true,
-                    tooltip: 'View Mode',
-                    elevation: 0,
-                    highlightElevation: 0,
-                    child: _sliversId == 1
-                        ? Icon(
-                            Icons.photo_rounded,
-                            color: Colors.grey[600],
-                            size: 28,
-                          )
-                        : Icon(
-                            Icons.art_track_rounded,
-                            color: Colors.grey[600],
-                            size: 28,
-                          ),
-                    backgroundColor: Colors.transparent,
-                    onPressed: () {
-                      _updateSlivers();
-                    },
-                  ),
-                ],
-              ),
+                ),
+                FloatingActionButton(
+                  heroTag: 'changeUI',
+                  mini: true,
+                  tooltip: 'View Mode',
+                  elevation: 0,
+                  highlightElevation: 0,
+                  child: _sliversId == 1
+                      ? Icon(
+                          Icons.photo_rounded,
+                          color: Colors.grey[600],
+                          size: 28,
+                        )
+                      : Icon(
+                          Icons.art_track_rounded,
+                          color: Colors.grey[600],
+                          size: 28,
+                        ),
+                  backgroundColor: Colors.transparent,
+                  onPressed: () {
+                    _updateSlivers();
+                  },
+                ),
+              ],
             ),
           ),
         ),
