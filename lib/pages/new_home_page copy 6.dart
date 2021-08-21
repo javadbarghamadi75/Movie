@@ -10,6 +10,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:movie/sheets/sort_modal_bottom_sheet.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:sliver_tools/sliver_tools.dart';
+// import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 
 class NewHomePageCopy6 extends StatefulWidget {
   final String title;
@@ -22,6 +23,18 @@ class NewHomePageCopy6 extends StatefulWidget {
 
 class _NewHomePageCopy6State extends State<NewHomePageCopy6>
     with TickerProviderStateMixin {
+  Widget appBarTitle = Text(
+    "MOVIE",
+    style: TextStyle(
+      color: Colors.amber[900],
+      fontWeight: FontWeight.w900,
+    ),
+  );
+  Icon icon = Icon(
+    Icons.search_rounded,
+    color: Colors.white60, //white60
+    size: 24,
+  );
   int _sliversId = 1;
   int _suffixesId = 1;
   bool isDataRecieved = false;
@@ -95,42 +108,69 @@ class _NewHomePageCopy6State extends State<NewHomePageCopy6>
   void sortFetchedPopularMovies({required String mode}) {
     mode == 'Title Ascending'
         ? setState(() {
-            items.sort((a, b) => a.title.compareTo(b.title));
+            searchResult.length == 0
+                ? items.sort((a, b) => a.title.compareTo(b.title))
+                : searchResult.sort((a, b) => a.title.compareTo(b.title));
           })
         : mode == 'Title Descending'
             ? setState(() {
-                items.sort((a, b) => b.title.compareTo(a.title));
+                searchResult.length == 0
+                    ? items.sort((a, b) => b.title.compareTo(a.title))
+                    : searchResult.sort((a, b) => b.title.compareTo(a.title));
               })
             : mode == 'Rate Ascending'
                 ? setState(() {
-                    items.sort((a, b) => a.imDbRating.compareTo(b.imDbRating));
+                    searchResult.length == 0
+                        ? items.sort(
+                            (a, b) => a.imDbRating.compareTo(b.imDbRating))
+                        : searchResult.sort(
+                            (a, b) => a.imDbRating.compareTo(b.imDbRating));
                   })
                 : mode == 'Rate Descending'
                     ? setState(() {
-                        items.sort(
-                            (a, b) => b.imDbRating.compareTo(a.imDbRating));
+                        searchResult.length == 0
+                            ? items.sort(
+                                (a, b) => b.imDbRating.compareTo(a.imDbRating))
+                            : searchResult.sort(
+                                (a, b) => b.imDbRating.compareTo(a.imDbRating));
                       })
                     : mode == 'Year Ascending'
                         ? setState(() {
-                            items.sort((a, b) => a.year.compareTo(b.year));
+                            searchResult.length == 0
+                                ? items.sort((a, b) => a.year.compareTo(b.year))
+                                : searchResult
+                                    .sort((a, b) => a.year.compareTo(b.year));
                           })
                         : mode == 'Year Descending'
                             ? setState(() {
-                                items.sort((a, b) => b.year.compareTo(a.year));
+                                searchResult.length == 0
+                                    ? items.sort(
+                                        (a, b) => b.year.compareTo(a.year))
+                                    : searchResult.sort(
+                                        (a, b) => b.year.compareTo(a.year));
                               })
                             : mode == 'Default Descending'
                                 ? setState(() {
-                                    items.sort(
-                                        (a, b) => b.rank.compareTo(a.rank));
+                                    searchResult.length == 0
+                                        ? items.sort(
+                                            (a, b) => b.rank.compareTo(a.rank))
+                                        : searchResult.sort(
+                                            (a, b) => b.rank.compareTo(a.rank));
                                   })
                                 : mode == 'Default Ascending'
                                     ? setState(() {
-                                        items.sort(
-                                            (a, b) => a.rank.compareTo(b.rank));
+                                        searchResult.length == 0
+                                            ? items.sort((a, b) =>
+                                                a.rank.compareTo(b.rank))
+                                            : searchResult.sort((a, b) =>
+                                                a.rank.compareTo(b.rank));
                                       })
                                     : setState(() {
-                                        items.sort(
-                                            (a, b) => a.rank.compareTo(b.rank));
+                                        searchResult.length == 0
+                                            ? items.sort((a, b) =>
+                                                a.rank.compareTo(b.rank))
+                                            : searchResult.sort((a, b) =>
+                                                a.rank.compareTo(b.rank));
                                       });
   }
 
@@ -191,7 +231,21 @@ class _NewHomePageCopy6State extends State<NewHomePageCopy6>
 
   void _handleSearchEnd() {
     setState(() {
+      this.icon = Icon(
+        Icons.search_rounded,
+        color: Colors.white60,
+        size: 24,
+      );
+      this.appBarTitle = Text(
+        "MOVIE",
+        style: TextStyle(
+          color: Colors.amber[900],
+          fontWeight: FontWeight.w900,
+        ),
+      );
       _isSearching = false;
+      searchResult.length = 0;
+      sortFetchedPopularMovies(mode: '$selectedSortModeButtonText');
       _textController.clear();
     });
   }
@@ -422,148 +476,149 @@ class _NewHomePageCopy6State extends State<NewHomePageCopy6>
           //     ),
           //   ),
           // ),
-          SliverAppBar(
-            snap: true,
-            // pinned: true,
-            floating: true,
-            toolbarHeight: AppBar().preferredSize.height + 20,
-            brightness: Brightness.dark,
-            elevation: 0,
-            backgroundColor: Colors.grey[900], //amber
-            // toolbarHeight: AppBar().preferredSize.height,
-            collapsedHeight: AppBar().preferredSize.height + 20,
-            // expandedHeight: AppBar().preferredSize.height + 10,
-            centerTitle: true,
-            title: Card(
-              shape: ContinuousRectangleBorder(
-                borderRadius: BorderRadius.circular(32),
-              ),
-              elevation: 0,
-              color: Colors.grey[850],
-              margin: EdgeInsets.symmetric(
-                horizontal: 10,
-                vertical: 0,
-              ),
-              child: TextField(
-                controller: _textController,
-                maxLines: 1,
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  textBaseline: TextBaseline.alphabetic,
-                  color: Colors.white70,
-                ),
-                textAlignVertical: TextAlignVertical.center,
-                keyboardType: TextInputType.text,
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                  // contentPadding: EdgeInsets.symmetric(horizontal: 15),
-                  hintText: 'Search',
-                  hintStyle: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    textBaseline: TextBaseline.alphabetic,
-                    color: Colors.white70,
-                  ),
-                  isDense: true, // Added this
-                  contentPadding: EdgeInsets.symmetric(
-                    horizontal: 15,
-                    // vertical: 12,
-                  ),
-                  suffixIcon: _renderSuffiexs(),
-                ),
-                onChanged: (value) {
-                  _updateSuffiexs();
-                  searchOperation(_textController.text);
-                },
-              ),
-            ),
-            bottom: PreferredSize(
-              preferredSize: AppBar().preferredSize,
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 15),
-                child: Container(
-                  color: Colors.grey[900],
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 25),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(left: 10),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              AutoSizeText(
-                                'Popular Movies',
-                                minFontSize: 16,
-                                maxFontSize: 20,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w900,
-                                  // fontSize: 20,
-                                  color: Colors.white,
-                                ),
-                              ),
-                              SizedBox(width: 10),
-                              Chip(
-                                label: AutoSizeText(
-                                  'Top ${items.length}',
-                                  minFontSize: 14,
-                                  maxFontSize: 16,
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    // fontSize: 14,
-                                    fontWeight: FontWeight.w900,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                                backgroundColor: Colors.amber[900],
-                                labelPadding: EdgeInsets.symmetric(
-                                  horizontal: 5,
-                                  vertical: 0,
-                                ),
-                                shape: ContinuousRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                // padding: EdgeInsets.zero,
-                                visualDensity: VisualDensity.compact,
-                              ),
-                            ],
-                          ),
-                        ),
-                        FloatingActionButton(
-                          heroTag: 'changeUI',
-                          mini: true,
-                          tooltip: 'View Mode',
-                          elevation: 0,
-                          highlightElevation: 0,
-                          child: _sliversId == 1
-                              ? Icon(
-                                  Icons.photo_rounded,
-                                  color: Colors.grey[600],
-                                  size: 28,
-                                )
-                              : Icon(
-                                  Icons.art_track_rounded,
-                                  color: Colors.grey[600],
-                                  size: 28,
-                                ),
-                          backgroundColor: Colors.transparent,
-                          onPressed: () {
-                            _updateSlivers();
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
+          buildAppBar(context),
+          // SliverAppBar(
+          //   snap: true,
+          //   // pinned: true,
+          //   floating: true,
+          //   toolbarHeight: AppBar().preferredSize.height + 20,
+          //   brightness: Brightness.dark,
+          //   elevation: 0,
+          //   backgroundColor: Colors.grey[900], //amber
+          //   // toolbarHeight: AppBar().preferredSize.height,
+          //   collapsedHeight: AppBar().preferredSize.height + 20,
+          //   // expandedHeight: AppBar().preferredSize.height + 10,
+          //   centerTitle: true,
+          //   title: Card(
+          //     shape: ContinuousRectangleBorder(
+          //       borderRadius: BorderRadius.circular(32),
+          //     ),
+          //     elevation: 0,
+          //     color: Colors.grey[850],
+          //     margin: EdgeInsets.symmetric(
+          //       horizontal: 10,
+          //       vertical: 0,
+          //     ),
+          //     child: TextField(
+          //       controller: _textController,
+          //       maxLines: 1,
+          //       style: TextStyle(
+          //         fontSize: 16,
+          //         fontWeight: FontWeight.bold,
+          //         textBaseline: TextBaseline.alphabetic,
+          //         color: Colors.white70,
+          //       ),
+          //       textAlignVertical: TextAlignVertical.center,
+          //       keyboardType: TextInputType.text,
+          //       decoration: InputDecoration(
+          //         border: InputBorder.none,
+          //         // contentPadding: EdgeInsets.symmetric(horizontal: 15),
+          //         hintText: 'Search',
+          //         hintStyle: TextStyle(
+          //           fontSize: 16,
+          //           fontWeight: FontWeight.bold,
+          //           textBaseline: TextBaseline.alphabetic,
+          //           color: Colors.white70,
+          //         ),
+          //         isDense: true, // Added this
+          //         contentPadding: EdgeInsets.symmetric(
+          //           horizontal: 15,
+          //           // vertical: 12,
+          //         ),
+          //         suffixIcon: _renderSuffiexs(),
+          //       ),
+          //       onChanged: (value) {
+          //         _updateSuffiexs();
+          //         searchOperation(_textController.text);
+          //       },
+          //     ),
+          //   ),
+          //   bottom: PreferredSize(
+          //     preferredSize: AppBar().preferredSize,
+          //     child: Padding(
+          //       padding: const EdgeInsets.only(bottom: 15),
+          //       child: Container(
+          //         color: Colors.grey[900],
+          //         child: Padding(
+          //           padding: EdgeInsets.symmetric(horizontal: 25),
+          //           child: Row(
+          //             mainAxisSize: MainAxisSize.max,
+          //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //             crossAxisAlignment: CrossAxisAlignment.center,
+          //             children: [
+          //               Padding(
+          //                 padding: EdgeInsets.only(left: 10),
+          //                 child: Row(
+          //                   mainAxisSize: MainAxisSize.max,
+          //                   mainAxisAlignment: MainAxisAlignment.start,
+          //                   crossAxisAlignment: CrossAxisAlignment.center,
+          //                   children: [
+          //                     AutoSizeText(
+          //                       'Popular Movies',
+          //                       minFontSize: 16,
+          //                       maxFontSize: 20,
+          //                       style: TextStyle(
+          //                         fontWeight: FontWeight.w900,
+          //                         // fontSize: 20,
+          //                         color: Colors.white,
+          //                       ),
+          //                     ),
+          //                     SizedBox(width: 10),
+          //                     Chip(
+          //                       label: AutoSizeText(
+          //                         'Top ${items.length}',
+          //                         minFontSize: 14,
+          //                         maxFontSize: 16,
+          //                         textAlign: TextAlign.center,
+          //                         style: TextStyle(
+          //                           // fontSize: 14,
+          //                           fontWeight: FontWeight.w900,
+          //                           color: Colors.black,
+          //                         ),
+          //                       ),
+          //                       backgroundColor: Colors.amber[900],
+          //                       labelPadding: EdgeInsets.symmetric(
+          //                         horizontal: 5,
+          //                         vertical: 0,
+          //                       ),
+          //                       shape: ContinuousRectangleBorder(
+          //                         borderRadius: BorderRadius.circular(20),
+          //                       ),
+          //                       // padding: EdgeInsets.zero,
+          //                       visualDensity: VisualDensity.compact,
+          //                     ),
+          //                   ],
+          //                 ),
+          //               ),
+          //               FloatingActionButton(
+          //                 heroTag: 'changeUI',
+          //                 mini: true,
+          //                 tooltip: 'View Mode',
+          //                 elevation: 0,
+          //                 highlightElevation: 0,
+          //                 child: _sliversId == 1
+          //                     ? Icon(
+          //                         Icons.photo_rounded,
+          //                         color: Colors.grey[600],
+          //                         size: 28,
+          //                       )
+          //                     : Icon(
+          //                         Icons.art_track_rounded,
+          //                         color: Colors.grey[600],
+          //                         size: 28,
+          //                       ),
+          //                 backgroundColor: Colors.transparent,
+          //                 onPressed: () {
+          //                   _updateSlivers();
+          //                 },
+          //               ),
+          //             ],
+          //           ),
+          //         ),
+          //       ),
+          //     ),
+          //   ),
+          // ),
           // ListView.builder(
           //   // padding: EdgeInsets.symmetric(vertical: 0),
           //   // controller: _scrollController,
@@ -977,6 +1032,231 @@ class _NewHomePageCopy6State extends State<NewHomePageCopy6>
                 },
               ),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildAppBar(BuildContext context) {
+    return SliverAppBar(
+      snap: true,
+      // pinned: true,
+      floating: true,
+      titleSpacing: 0,
+      toolbarHeight: AppBar().preferredSize.height + 20,
+      brightness: Brightness.dark,
+      elevation: 0,
+      backgroundColor: Colors.grey[900], //amber
+      // toolbarHeight: AppBar().preferredSize.height,
+      collapsedHeight: AppBar().preferredSize.height + 20,
+      // expandedHeight: AppBar().preferredSize.height + 10,
+      centerTitle: true,
+      title: appBarTitle,
+      actions: [
+        SizedBox(
+          width: 25,
+        ),
+        Padding(
+          padding: EdgeInsets.only(right: 25),
+          child: FloatingActionButton(
+            child: icon,
+            mini: true,
+            tooltip: 'Search for a Movie',
+            backgroundColor: Colors.transparent,
+            splashColor: Colors.transparent,
+            highlightElevation: 0,
+            elevation: 0,
+            onPressed: () {
+              setState(() {
+                if (this.icon.icon == Icons.search_rounded) {
+                  this.icon = Icon(
+                    Icons.close_rounded,
+                    color: Colors.white60,
+                  );
+                  this.appBarTitle = Padding(
+                    padding: const EdgeInsets.only(left: 25),
+                    child: Card(
+                      shape: ContinuousRectangleBorder(
+                        borderRadius: BorderRadius.circular(32),
+                      ),
+                      elevation: 0,
+                      color: Colors.grey[850],
+                      margin: EdgeInsets.zero,
+                      child: TextField(
+                        autofocus: true,
+                        controller: _textController,
+                        maxLines: 1,
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          textBaseline: TextBaseline.alphabetic,
+                          color: Colors.white70,
+                        ),
+                        // textAlignVertical: TextAlignVertical.center,
+                        keyboardType: TextInputType.text,
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          //   //   // contentPadding: EdgeInsets.symmetric(horizontal: 15),
+                          hintText: 'Search..',
+                          hintStyle: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            textBaseline: TextBaseline.alphabetic,
+                            color: Colors.white54,
+                          ),
+                          //   //   isDense: false, // Added this
+                          contentPadding: EdgeInsets.symmetric(horizontal: 15),
+                          //   //   // suffixIcon: _renderSuffiexs(),
+                        ),
+                        onChanged: (value) {
+                          // _updateSuffiexs();
+                          searchOperation(_textController.text);
+                          sortFetchedPopularMovies(
+                              mode: '$selectedSortModeButtonText');
+                        },
+                      ),
+                    ),
+                  );
+                  _handleSearchStart();
+                } else {
+                  _handleSearchEnd();
+                }
+              });
+            },
+          ),
+        )
+      ],
+      bottom: PreferredSize(
+        preferredSize: AppBar().preferredSize,
+        child: Padding(
+          padding: EdgeInsets.only(bottom: 15),
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 25),
+            child: Container(
+              color: Colors.yellow,
+              child: Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(left: 10),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        _isSearching == false
+                            ? AutoSizeText(
+                                'Popular Movies',
+                                minFontSize: 16,
+                                maxFontSize: 20,
+                                maxLines: 2,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w900,
+                                  // fontSize: 20,
+                                  color: Colors.white,
+                                ),
+                              )
+                            : Container(
+                                width: MediaQuery.of(context).size.width - 178,
+                                color: Colors.blue,
+                                child: AutoSizeText(
+                                  _textController.text == "" ||
+                                          _textController.text.isEmpty
+                                      ? 'Popular Movies'
+                                      : 'Searching for : "${_textController.text}"',
+                                  minFontSize: 16,
+                                  maxFontSize: 20,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w900,
+                                    // fontSize: 20,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                        SizedBox(width: 10),
+                        _isSearching == false
+                            ? Chip(
+                                label: AutoSizeText(
+                                  'Top ${items.length}',
+                                  minFontSize: 14,
+                                  maxFontSize: 16,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    // fontSize: 14,
+                                    fontWeight: FontWeight.w900,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                                backgroundColor: Colors.amber[900],
+                                labelPadding: EdgeInsets.symmetric(
+                                  horizontal: 5,
+                                  vertical: 0,
+                                ),
+                                shape: ContinuousRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                // padding: EdgeInsets.zero,
+                                visualDensity: VisualDensity.compact,
+                              )
+                            : Chip(
+                                label: AutoSizeText(
+                                  _textController.text == "" ||
+                                          _textController.text.isEmpty
+                                      ? 'Top ${items.length}'
+                                      : '${searchResult.length}',
+                                  minFontSize: 14,
+                                  maxFontSize: 16,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    // fontSize: 14,
+                                    fontWeight: FontWeight.w900,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                                backgroundColor: Colors.amber[900],
+                                labelPadding: EdgeInsets.symmetric(
+                                  horizontal: 5,
+                                  vertical: 0,
+                                ),
+                                shape: ContinuousRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                // padding: EdgeInsets.zero,
+                                visualDensity: VisualDensity.compact,
+                              ),
+                      ],
+                    ),
+                  ),
+                  FloatingActionButton(
+                    heroTag: 'changeUI',
+                    mini: true,
+                    tooltip: 'View Mode',
+                    elevation: 0,
+                    highlightElevation: 0,
+                    child: _sliversId == 1
+                        ? Icon(
+                            Icons.photo_rounded,
+                            color: Colors.grey[600],
+                            size: 28,
+                          )
+                        : Icon(
+                            Icons.art_track_rounded,
+                            color: Colors.grey[600],
+                            size: 28,
+                          ),
+                    backgroundColor: Colors.transparent,
+                    onPressed: () {
+                      _updateSlivers();
+                    },
+                  ),
+                ],
+              ),
+            ),
           ),
         ),
       ),
